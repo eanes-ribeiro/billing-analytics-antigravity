@@ -35,3 +35,7 @@ Process:
 
 ## Constraints
 - Task completion ≠ Goal achievement. O código executar sem erro de sintaxe NÃO significa aprovação. O pipeline só é aprovado se a intenção de negócio (Goal-Backward) for encontrada no SQL.
+
+## Stop Conditions
+- O processo de verificação encerra quando a reconciliação entre a origem (Bronze) e o destino (Gold) resulta em uma diferença de $0.00 ou quando as divergências são explicadas tecnicamente por arredondamentos na 4ª casa decimal.
+- O agente deve interromper a execução caso identifique um "leakage" (perda de receita) superior ao limite de tolerância definido no arquivo de regras de negócio.

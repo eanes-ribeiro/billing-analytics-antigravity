@@ -6,11 +6,12 @@ description: description: Orquestra a refatoração ou alteração de regras de 
 
 When the user types `/adjust-billing-etl <nome_do_etl> <descricao_da_mudanca>`:
 
-## Phase 1: Exploration & Impact Analysis
-1. **Agent**: `@code-explorer`
-2. **Action**: Utilize a skill `context-manager` para carregar o estado atual. Em seguida, acione a skill `explore_billing_logic`.
-3. **Task**: Faça a engenharia reversa do código atual do `<nome_do_etl>`. Gere o "Mapa de Regras" e um relatório de impacto (Impact Report) focando em dependências (Upstream/Downstream) e possíveis "Regras Fantasmas". Salve a análise em `docs/exploration/`.
-4. **Halt**: PAUSE OBRIGATORIAMENTE. Apresente o resumo dos riscos de impacto ao usuário e aguarde a autorização explícita para prosseguir.
+## Phase 1: Discovery & Lineage
+**Agent:** @code-explorer
+**Skill:** explore_billing_logic
+**Context:** - Diretório `models/` para análise de linhagem.
+- Arquivo `README.md` do projeto para contexto de negócio.
+**Goal:** Identificar todos os modelos impactados pela alteração solicitada e mapear a origem do dado até a camada Gold.
 
 ## Phase 2: Delta Specification
 1. **Agent**: `@billing-pm`

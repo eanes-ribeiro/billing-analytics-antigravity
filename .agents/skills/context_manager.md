@@ -1,32 +1,21 @@
----
-name: context-manager
-tier: T1
-description: Gerencia o estado do projeto e o histórico da sessão baseando-se no padrão Get-Shit-Done.
-tools: [Read, Write, Edit]
----
+# Skill: Context Manager
 
-# Context Manager
+## Description
+Responsável por manter, atualizar e validar o contexto de execução durante um workflow. Garante que todos os agentes operem sobre uma base de dados íntegra e que o estado do projeto seja consistente entre as fases.
 
-## Identity
-Especialista em retenção de escopo e rastreabilidade de decisões arquiteturais.
-Goal: Garantir que nenhum agente perca o contexto das regras de negócio durante o ciclo de desenvolvimento do ETL.
+## Instructions
+1. **Inicialização de Contexto**: No início de cada workflow, carregue a documentação relevante do projeto (README, schema.yml) e identifique as entidades de faturamento envolvidas.
+2. **Atualização de Estado**: Após cada fase, atualize o estado de execução com os resultados obtidos, garantindo que o próximo agente receba o contexto processado.
+3. **Roteamento de Informações**: Identifique e direcione métricas financeiras ou erros de tipagem detectados por um agente para as personas de auditoria ou engenharia.
+4. **Verificação de Dependências (Dependency Check)**: 
+   - Antes de iniciar os workflows `/new-billing-etl` ou `/adjust-billing-etl`, valide se as tabelas de origem (upstream) na camada Bronze e Silver estão com metadados de *freshness* atualizados.
+   - Verifique se os contratos de dados (Data Contracts) definidos em `kb/engineering/data_quality_contracts.md` estão sendo respeitados pelas tabelas de origem.
+   - Caso uma dependência crítica esteja offline ou desatualizada, interrompa o fluxo e emita um alerta de "Bloqueio de Execução".
 
-## Capabilities
+## Tools
+- `state_manager`: Para salvar e recuperar o estado da execução.
+- `file_search`: Para localizar definições de fontes e dependências nos arquivos YAML do dbt.
 
-### Capability 1: Load Context
-Trigger: "iniciar sessão", "carregar contexto", "onde paramos".
-Process:
-1. Ler o arquivo `docs/state.md` e `docs/context.md`.
-2. Resumir a fase atual (Discovery, Execution ou Verification).
-3. Listar as regras de faturamento ativas na memória (ex: Taxa de juros atual, regras de pro-rata).
-
-### Capability 2: Update State
-Trigger: "salvar progresso", "atualizar estado", "finalizar etapa".
-Process:
-1. Gravar as decisões tomadas na interação atual no arquivo `docs/state.md`.
-2. Atualizar o status da tarefa (Todo -> In Progress -> Done).
-3. Registrar bloqueios ou dependências pendentes.
-
-## Quality Gate
-- O arquivo state.md foi atualizado com a data e hora da modificação?
-- O próximo passo lógico foi explicitamente definido no documento?
+## Stop Conditions
+- O contexto é marcado como "Pronto para Execução" somente após a validação bem-sucedida de todas as dependências upstream.
+- Em caso de falha de dependência, o agente deve parar e solicitar intervenção humana, fornecendo o log do erro de linhagem.

@@ -15,14 +15,12 @@ When the user types `/audit-query <arquivo.sql>`:
    - Confirme se não há `DISTINCT` pesados que possam ser substituídos por `ROW_NUMBER()`.
 4. **Output**: Gere um breve relatório de otimização (Query Plan Analysis) propondo melhorias de performance, se necessário.
 
-## Phase 2: Financial Integrity Audit
-1. **Agent**: `@financial-auditor`
-2. **Action**: Assuma o contexto. Analise a query original e as sugestões da Fase 1 usando a skill `financial_verifier`.
-3. **Task**: 
-   - **Precision Check**: Garanta que há ABSOLUTAMENTE ZERO uso de `FLOAT` ou `DOUBLE` e que cálculos intermediários usam `DECIMAL(18,4)`.
-   - **Leakage Check**: Busque por `INNER JOINs` perigosos que possam dropar linhas de clientes elegíveis silenciosamente.
-   - **Rounding Check**: Verifique se arredondamentos estão sendo feitos precocemente, o que poderia acumular distorções no Net Final.
-4. **Halt**: PAUSE OBRIGATORIAMENTE. Emita um "LAUDO DE AUDITORIA" (Aprovado / Risco Encontrado) e exiba na tela para o usuário.
+## Phase 2: Optimization Analysis
+**Agent:** @sql-optimizer
+**Skill:** sql_optimization
+**Context:**
+- Arquivo `kb/engineering/spark_sql_performance.md` para diretrizes de custo.
+**Goal:** Identificar gargalos de performance, sugerir Broadcast Joins e garantir o Partition Pruning.
 
 ## Phase 3: State Sync (Background)
 1. **Agent**: `@financial-auditor`
