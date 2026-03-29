@@ -1,3 +1,4 @@
+
 # Otimização Spark SQL para Faturamento
 
 ## 1. Partition Pruning (Filtragem Estática)
